@@ -1,0 +1,20 @@
+{
+  "name": "node-cpu-heavy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "child-process": "cross-env NODE_ENV=production nodemon ./child-process.js",
+    "clustered": "cross-env NODE_ENV=production nodemon ./clustered.js",
+    "simple": "cross-env NODE_ENV=production nodemon ./simple.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "fastify": "^3.27.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
