@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "child-process": "cross-env NODE_ENV=production nodemon ./child-process.js",
-    "clustered": "cross-env NODE_ENV=production nodemon ./clustered.js",
-    "simple": "cross-env NODE_ENV=production nodemon ./simple.js"
+    "child-process": "cross-env NODE_ENV=production nodemon ./child-process/index.js",
+    "clustered": "cross-env NODE_ENV=production nodemon ./cluster/index.js",
+    "lint": "eslint",
+    "simple": "cross-env NODE_ENV=production nodemon ./simple/index.js",
+    "threads": "cross-env NODE_ENV=production nodemon ./threads/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +17,9 @@
     "fastify": "^3.27.1"
   },
   "devDependencies": {
+    "eslint": "^8.8.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
     "nodemon": "^2.0.15"
   }
 }

@@ -1,7 +1,7 @@
-const console = require('console');
 const fastify = require('fastify');
 
-const task = require('./task');
+const logger = require('../logger');
+const task = require('../task');
 
 const app = fastify();
 
@@ -10,7 +10,7 @@ app.get('/', (request, reply) => {
   const sum = task();
 
   const delay = Date.now() - now;
-  console.log('Pre-reply:', delay, request.id);
+  logger('Pre-reply:', delay, request.id);
   return reply.code(200).send({
     delay,
     sum,
@@ -24,6 +24,6 @@ app.listen(
       throw error;
     }
 
-    return console.log('-- SIMPLE server is running on port 5001');
-  }
+    return logger('-- SIMPLE server is running on port 5001');
+  },
 );
