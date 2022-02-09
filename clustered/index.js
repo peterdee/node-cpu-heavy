@@ -8,12 +8,13 @@ const task = require('../task');
 const app = fastify();
 const cpus = os.cpus().length;
 
-app.get('/', (request, reply) => {
-  const now = Date.now();
-  const sum = task();
+let i = 0;
 
-  const delay = Date.now() - now;
-  logger('Pre-reply:', delay, request.id);
+app.get('/', (_, reply) => {
+  const { delay, sum } = task();
+
+  i += 1;
+  logger('Pre-reply:', delay, i);
   return reply.code(200).send({
     delay,
     sum,
@@ -21,7 +22,7 @@ app.get('/', (request, reply) => {
 });
 
 if (cluster.isPrimary) {
-  for (let i = 0; i < cpus; i += 1) {
+  for (let c = 0; c < cpus; c += 1) {
     cluster.fork();
   }
 } else {

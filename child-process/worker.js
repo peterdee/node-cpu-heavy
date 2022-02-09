@@ -1,8 +1,8 @@
 const task = require('../task');
 
 function work() {
-  const sum = task();
-  process.send(sum);
+  const result = task();
+  process.send(result);
 
   return process.exit(0);
 }

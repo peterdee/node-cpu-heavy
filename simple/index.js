@@ -3,14 +3,17 @@ const fastify = require('fastify');
 const logger = require('../logger');
 const task = require('../task');
 
-const app = fastify();
+const app = fastify({
+  logger: true,
+});
 
-app.get('/', (request, reply) => {
-  const now = Date.now();
-  const sum = task();
+let i = 0;
 
-  const delay = Date.now() - now;
-  logger('Pre-reply:', delay, request.id);
+app.get('/', (_, reply) => {
+  const { delay, sum } = task();
+
+  i += 1;
+  logger('Pre-reply:', delay, i);
   return reply.code(200).send({
     delay,
     sum,

@@ -5,13 +5,13 @@ const logger = require('../logger');
 
 const app = fastify();
 
-app.get('/', (request, reply) => {
-  const now = Date.now();
+let i = 0;
 
+app.get('/', (_, reply) => {
   const child = fork(`${process.cwd()}/child-process/worker.js`);
-  child.on('message', (sum) => {
-    const delay = Date.now() - now;
-    logger('Pre-reply:', delay, request.id);
+  child.on('message', ({ delay, sum }) => {
+    i += 1;
+    logger('Pre-reply:', delay, i);
     return reply.code(200).send({
       delay,
       sum,

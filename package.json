@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "child-process": "cross-env NODE_ENV=production nodemon ./child-process/index.js",
-    "clustered": "cross-env NODE_ENV=production nodemon ./cluster/index.js",
+    "clustered": "cross-env NODE_ENV=production nodemon ./clustered/index.js",
     "lint": "eslint",
     "simple": "cross-env NODE_ENV=production nodemon ./simple/index.js",
     "threads": "cross-env NODE_ENV=production nodemon ./threads/index.js"
