@@ -11,7 +11,7 @@ app.get('/', (_, reply) => {
   const child = fork(`${process.cwd()}/child-process/worker.js`);
   child.on('message', ({ delay, sum }) => {
     i += 1;
-    logger('Pre-reply:', delay, i);
+    logger('Request:', i);
     return reply.code(200).send({
       delay,
       sum,

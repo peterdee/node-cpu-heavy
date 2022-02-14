@@ -14,7 +14,7 @@ app.get('/', (_, reply) => {
   const { delay, sum } = task();
 
   i += 1;
-  logger('Pre-reply:', delay, i);
+  logger('Request:', i);
   return reply.code(200).send({
     delay,
     sum,

@@ -13,7 +13,7 @@ app.get('/', async (_, reply) => {
     worker.on('message', resolve);
   });
   i += 1;
-  logger('Pre-reply:', delay, i);
+  logger('Request:', i);
   return reply.code(200).send({
     delay,
     sum,
