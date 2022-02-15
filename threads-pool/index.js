@@ -41,7 +41,15 @@ class Pool {
 
 const pool = new Pool();
 
+app.server.on('connection', (connection) => {
+  logger('open');
+  connection.on('close', () => {
+    logger('close');
+  });
+});
+
 app.get('/', async (request, reply) => {
+  logger('handle', Object.keys(reply.raw.socket));
   const now = Date.now();
 
   pool.addRequest(request, reply);

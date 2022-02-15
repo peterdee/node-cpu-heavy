@@ -5,13 +5,8 @@ const task = require('../task');
 
 const app = fastify();
 
-let i = 0;
-
 app.get('/', (_, reply) => {
   const { delay, sum } = task();
-
-  i += 1;
-  logger('Request:', i);
   return reply.code(200).send({
     delay,
     sum,
