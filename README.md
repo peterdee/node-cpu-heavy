@@ -131,7 +131,7 @@ Req/Bytes counts sampled once per second.
 
 #### 4. Worker Threads server
 
-A server where a new Worker Thread is launched every time request hits the server (i. e. request handler function is running), this affects the perfomance since lots of new threads are created to handle incoming requests
+A server where a new Worker Thread is launched every time request hits the server (i. e. request handler function is running), this affects the performance since lots of new threads are created to handle incoming requests
 
 All of these threads are bound to a single process
 
@@ -168,4 +168,46 @@ Running 20s test @ http://localhost:5001
 Req/Bytes counts sampled once per second.
 
 384 requests in 20.79s, 58.5 kB read
+```
+
+#### 5. Clustered Threads server
+
+A clustered server that launches a Worker Thread to do the heavy task every time request hits the server (i. e. request handler function is running)
+
+Number of processes are limited to `os.cpus().length`, and each process creates a thread to handle a heavy task, so the amount of additional threads are restricted to 2 for each process (main thread and heavy task thread)
+
+Creating additional thread within a process negatively impacts the performance compared to just using `cluster`
+
+- MBP
+
+```text
+// autocannon -c 100 -d 20 http://localhost:5001
+
+TODO: measure
+```
+
+- PC
+
+```text
+// autocannon -c 100 -d 20 http://localhost:5001
+Running 20s test @ http://localhost:5001
+100 connections
+
+┌─────────┬────────┬─────────┬─────────┬─────────┬───────────┬────────────┬─────────┐
+│ Stat    │ 2.5%   │ 50%     │ 97.5%   │ 99%     │ Avg       │ Stdev      │ Max     │
+├─────────┼────────┼─────────┼─────────┼─────────┼───────────┼────────────┼─────────┤
+│ Latency │ 986 ms │ 3302 ms │ 9852 ms │ 9867 ms │ 4421.1 ms │ 3026.64 ms │ 9986 ms │
+└─────────┴────────┴─────────┴─────────┴─────────┴───────────┴────────────┴─────────┘
+┌───────────┬─────┬──────┬─────────┬─────────┬─────────┬─────────┬───────┐
+│ Stat      │ 1%  │ 2.5% │ 50%     │ 97.5%   │ Avg     │ Stdev   │ Min   │
+├───────────┼─────┼──────┼─────────┼─────────┼─────────┼─────────┼───────┤
+│ Req/Sec   │ 0   │ 0    │ 7       │ 43      │ 13.5    │ 14.12   │ 2     │
+├───────────┼─────┼──────┼─────────┼─────────┼─────────┼─────────┼───────┤
+│ Bytes/Sec │ 0 B │ 0 B  │ 1.44 kB │ 8.88 kB │ 2.79 kB │ 2.91 kB │ 412 B │
+└───────────┴─────┴──────┴─────────┴─────────┴─────────┴─────────┴───────┘
+
+Req/Bytes counts sampled once per second.
+
+420 requests in 20.29s, 50.1 kB read
+77 errors (77 timeouts)
 ```
