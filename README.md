@@ -297,3 +297,52 @@ Req/Bytes counts sampled once per second.
 420 requests in 20.29s, 50.1 kB read
 77 errors (77 timeouts)
 ```
+
+#### 6. Queued Threads server
+
+This is the server that queues incoming requests and then handles them with Worker Threads
+
+When launching the test, 100 TCP connections are created and are opened during the whole test
+
+Each connection sends requests that are handled by HTTP module and then Fastify controller
+
+Several Worker Threads are launched at the server start, and are used to offload the heavy task into them, so that the main thread that runs Fastify server can serve the connections
+
+Requests are handled if workers are available, otherwise they are queued and then processed when free worker is available
+
+This approach avoids main thread blocking, and everything works within the single process
+
+As a result, this server has pretty much the same performance as with a `cluster` module, but only a single process is being used
+
+- MBP
+
+```text
+// autocannon -c 100 -d 20 http://localhost:5001
+
+TODO: measurements
+```
+
+- PC
+
+```text
+// autocannon -c 100 -d 20 http://localhost:5001
+Running 20s test @ http://localhost:5001
+100 connections
+
+┌─────────┬────────┬─────────┬─────────┬─────────┬────────────┬───────────┬─────────┐
+│ Stat    │ 2.5%   │ 50%     │ 97.5%   │ 99%     │ Avg        │ Stdev     │ Max     │
+├─────────┼────────┼─────────┼─────────┼─────────┼────────────┼───────────┼─────────┤
+│ Latency │ 657 ms │ 3188 ms │ 3334 ms │ 3344 ms │ 2979.67 ms │ 646.89 ms │ 3351 ms │
+└─────────┴────────┴─────────┴─────────┴─────────┴────────────┴───────────┴─────────┘
+┌───────────┬─────────┬─────────┬─────────┬────────┬─────────┬───────┬─────────┐
+│ Stat      │ 1%      │ 2.5%    │ 50%     │ 97.5%  │ Avg     │ Stdev │ Min     │
+├───────────┼─────────┼─────────┼─────────┼────────┼─────────┼───────┼─────────┤
+│ Req/Sec   │ 26      │ 26      │ 32      │ 33     │ 30.95   │ 1.86  │ 26      │
+├───────────┼─────────┼─────────┼─────────┼────────┼─────────┼───────┼─────────┤
+│ Bytes/Sec │ 5.36 kB │ 5.36 kB │ 6.59 kB │ 6.8 kB │ 6.38 kB │ 382 B │ 5.36 kB │
+└───────────┴─────────┴─────────┴─────────┴────────┴─────────┴───────┴─────────┘
+
+Req/Bytes counts sampled once per second.
+
+719 requests in 20.18s, 128 kB read
+```
